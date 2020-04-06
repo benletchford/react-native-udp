@@ -109,6 +109,8 @@ UdpSocket.prototype.bind = function(...args) {
 }
 
 UdpSocket.prototype.close = function(callback = noop) {
+  const self = this
+
   if (this._destroyed) return setImmediate(callback)
 
   this.once('close', callback)
@@ -119,11 +121,11 @@ UdpSocket.prototype.close = function(callback = noop) {
   this._subscription.remove()
 
   Sockets.close(this._id, (err) => {
-    if (err) return this.emit('error', err)
+    if (err) return self.emit('error', err)
 
-    this._destroyed = true
-    this._debug('closed')
-    this.emit('close')
+    self._destroyed = true
+    self._debug('closed')
+    self.emit('close')
   })
 }
 
